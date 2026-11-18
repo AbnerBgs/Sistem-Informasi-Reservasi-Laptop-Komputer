@@ -35,7 +35,7 @@
                 <a href="#reservasi" class="hover:text-gray-900 transition">Reservasi</a>
                 <a href="tracking.php" class="hover:text-gray-900 transition">Cek Status Tiket</a>
                 <a href="admin/login.php" class="bg-brand-light hover:bg-brand-medium text-gray-800 px-4 py-2 rounded-lg transition">
-                    Admin
+                    Users
                 </a>
             </div>
         </div>

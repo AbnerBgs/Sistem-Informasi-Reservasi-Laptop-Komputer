@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin - Project Web Service Laptop</title>
+    <title>Login - Project Web Service Laptop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="bg-brand-bg min-h-screen flex items-center justify-center p-6 text-gray-700">
     <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-brand-medium">
         <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Login Admin</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Login</h1>
             <p class="text-sm text-gray-500 mt-1">Project Web Service Laptop</p>
         </div>
 
@@ -60,12 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium mb-1">Email</label>
-                <input type="email" name="email" required placeholder="admin@gmail.com"
+                <input type="email" name="email" required placeholder="........"
                     class="w-full border border-gray-200 bg-brand-light/30 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark">
             </div>
             <div>
                 <label class="block text-sm font-medium mb-1">Password</label>
-                <input type="password" name="password" required placeholder="••••••••"
+                <input type="password" name="password" required placeholder="........"
                     class="w-full border border-gray-200 bg-brand-light/30 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark">
             </div>
             <button type="submit" class="w-full bg-brand-dark hover:bg-[#b0d2d2] text-gray-800 font-semibold py-2.5 rounded-lg transition">

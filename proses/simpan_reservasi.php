@@ -14,8 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               VALUES ('$ticket_code', '$customer_name', '$customer_phone', '$device_type', '$device_brand', '$problem_description', 'pending')";
 
     if (mysqli_query($conn, $query)) {
-        // Ganti dengan nomor WA kamu (format 628xxx)
-        $adminWA = '6281234567890';
+        $adminWA = '6282310276459';
         
         $message = "Halo Admin, saya ingin konfirmasi reservasi service:\n\n"
                  . "*No. Tiket:* $ticket_code\n"

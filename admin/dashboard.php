@@ -25,7 +25,7 @@ while ($row = mysqli_fetch_assoc($query)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanban Board Admin - Project Web Service Laptop</title>
+    <title>DashBoard Admin - Project Web Service Laptop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -42,7 +42,7 @@ while ($row = mysqli_fetch_assoc($query)) {
 <body class="bg-brand-bg min-h-screen text-gray-700">
     <nav class="bg-white border-b border-brand-medium px-6 py-4 flex justify-between items-center">
         <div>
-            <h1 class="font-bold text-lg text-gray-800">Dashboard Kanban Servis</h1>
+            <h1 class="font-bold text-lg text-gray-800">Dashboard Servis Admin</h1>
             <p class="text-xs text-gray-500">Halo, <?php echo htmlspecialchars($_SESSION['admin_name']); ?></p>
         </div>
         <div class="flex items-center gap-4">
