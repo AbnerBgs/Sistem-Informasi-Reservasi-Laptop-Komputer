@@ -9,9 +9,12 @@ if (!isset($_SESSION['admin_id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id     = (int) $_POST['id'];
-    $status = mysqli_real_escape_string($conn, $_POST['status']);
+    $status = trim($_POST['status']);
 
-    mysqli_query($conn, "UPDATE services SET status = '$status' WHERE id = $id");
+    $stmt = $conn->prepare("UPDATE services SET status = ? WHERE id = ?");
+    $stmt->bind_param("si", $status, $id);
+    $stmt->execute();
+    $stmt->close();
 }
 
 header("Location: ../admin/dashboard.php");

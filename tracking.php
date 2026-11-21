@@ -1,16 +1,21 @@
 <?php
-require_once 'config/koneksi.php';
+require_once __DIR__ . '/config/koneksi.php';
 
-$service = null;
-$ticket_code = '';
+$ticket = null;
+$searched = false;
 
-if (isset($_GET['ticket_code']) && !empty(trim($_GET['ticket_code']))) {
-    $ticket_code = mysqli_real_escape_string($conn, trim($_GET['ticket_code']));
-    $query = "SELECT * FROM services WHERE ticket_code = '$ticket_code' LIMIT 1";
-    $result = mysqli_query($conn, $query);
-    if ($result && mysqli_num_rows($result) > 0) {
-        $service = mysqli_fetch_assoc($result);
-    }
+if (isset($_GET['kode']) && trim($_GET['kode']) !== '') {
+    $searched = true;
+    $kode = trim($_GET['kode']);
+
+    $stmt = $conn->prepare("SELECT services.*, categories.category_name, categories.estimated_cost 
+                            FROM services 
+                            LEFT JOIN categories ON services.category_id = categories.id 
+                            WHERE services.ticket_code = ? LIMIT 1");
+    $stmt->bind_param("s", $kode);
+    $stmt->execute();
+    $ticket = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
 }
 ?>
 <!DOCTYPE html>
@@ -18,82 +23,66 @@ if (isset($_GET['ticket_code']) && !empty(trim($_GET['ticket_code']))) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Web Service Laptop - Cek Status Servis</title>
+    <title>Lacak Status Servis - Semoga Nyala</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            dark: '#C4DFDF',
-                            medium: '#D2E9E9',
-                            light: '#E3F4F4',
-                            bg: '#F8F6F4'
-                        }
+                        brand: { dark: '#C4DFDF', medium: '#D2E9E9', light: '#E3F4F4', bg: '#F8F6F4' }
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-brand-bg min-h-screen p-6 text-gray-700 flex flex-col justify-between">
-    <div class="max-w-xl mx-auto w-full bg-white p-8 rounded-2xl shadow-sm border border-brand-medium my-auto">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Project Web Service Laptop</h1>
-            <p class="text-sm text-gray-500 mt-1">Lacak status pengerjaan perangkat Anda secara real-time</p>
-        </div>
-        
-        <form action="tracking.php" method="GET" class="flex gap-2 mb-6">
-            <input type="text" name="ticket_code" placeholder="Masukkan Kode Tiket (Contoh: TK-20261117-XXXX)" value="<?php echo htmlspecialchars($ticket_code); ?>" 
-                class="flex-1 border border-gray-200 bg-brand-light/30 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark transition text-sm">
-            <button type="submit" class="bg-brand-dark hover:bg-[#b0d2d2] text-gray-800 px-5 py-2.5 rounded-lg font-semibold text-sm transition shadow-sm">
-                Cari Tiket
+<body class="bg-brand-bg min-h-screen flex items-center justify-center p-6 text-gray-700">
+    <div class="max-w-lg w-full bg-white p-8 rounded-2xl shadow-sm border border-brand-medium">
+        <h1 class="text-xl font-bold text-gray-800 mb-1">Lacak Status Servis</h1>
+        <p class="text-xs text-gray-500 mb-6">Masukkan kode tiket Anda (contoh: TK-20261118-7A0C)</p>
+
+        <form method="GET" class="flex gap-2 mb-6">
+            <input type="text" name="kode" required placeholder="Masukkan kode tiket..."
+                   value="<?php echo isset($_GET['kode']) ? htmlspecialchars($_GET['kode']) : ''; ?>"
+                   class="flex-1 border border-gray-200 bg-brand-light/20 p-2.5 rounded-lg text-sm">
+            <button type="submit" class="bg-brand-dark hover:bg-[#b0d2d2] text-gray-800 font-semibold px-5 py-2.5 rounded-lg text-sm">
+                Cek
             </button>
         </form>
 
-        <?php if (!empty($ticket_code)): ?>
-            <?php if ($service): ?>
-                <div class="border border-brand-medium bg-brand-light/20 p-5 rounded-xl space-y-3 text-sm">
-                    <div class="flex justify-between items-center border-b border-brand-medium/50 pb-2">
-                        <span class="text-gray-500">Kode Tiket</span>
-                        <span class="font-mono font-bold text-gray-800 bg-white px-2 py-0.5 rounded border border-brand-medium"><?php echo htmlspecialchars($service['ticket_code']); ?></span>
+        <?php if ($searched): ?>
+            <?php if ($ticket): ?>
+                <div class="bg-brand-light/40 border border-brand-medium rounded-xl p-5 space-y-2 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="font-mono font-bold text-gray-800"><?php echo htmlspecialchars($ticket['ticket_code']); ?></span>
+                        <span class="bg-brand-dark text-gray-800 text-xs font-bold uppercase px-3 py-1 rounded-full">
+                            <?php echo htmlspecialchars($ticket['status']); ?>
+                        </span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Nama Pelanggan</span>
-                        <span class="font-medium text-gray-800"><?php echo htmlspecialchars($service['customer_name']); ?></span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Perangkat</span>
-                        <span class="font-medium text-gray-800"><?php echo htmlspecialchars($service['device_type'] . ' (' . $service['device_brand'] . ')'); ?></span>
-                    </div>
-                    <div>
-                        <span class="text-gray-500 block mb-1">Deskripsi Kendala</span>
-                        <p class="bg-white p-2.5 rounded border border-gray-100 text-gray-700"><?php echo htmlspecialchars($service['problem_description']); ?></p>
-                    </div>
-                    
-                    <div class="mt-4 pt-2">
-                        <div class="p-3 bg-brand-medium/60 text-gray-800 rounded-lg font-semibold text-center tracking-wide">
-                            STATUS: <span class="uppercase font-bold text-gray-900"><?php echo htmlspecialchars($service['status']); ?></span>
+                    <p><strong>Pelanggan:</strong> <?php echo htmlspecialchars($ticket['customer_name']); ?></p>
+                    <p><strong>Perangkat:</strong> <?php echo htmlspecialchars($ticket['device_type'] . ' - ' . $ticket['device_brand']); ?></p>
+                    <?php if (!empty($ticket['category_name'])): ?>
+                        <p><strong>Kategori:</strong> <?php echo htmlspecialchars($ticket['category_name']); ?> (Estimasi: <?php echo htmlspecialchars($ticket['estimated_cost']); ?>)</p>
+                    <?php endif; ?>
+                    <p><strong>Keluhan:</strong> <?php echo htmlspecialchars($ticket['problem_description']); ?></p>
+                    <?php if (!empty($ticket['damage_photo'])): ?>
+                        <div class="pt-2">
+                            <p class="text-xs font-semibold mb-1">Foto Kondisi Awal:</p>
+                            <img src="uploads/<?php echo htmlspecialchars($ticket['damage_photo']); ?>" alt="Foto Kerusakan" class="w-full h-40 object-cover rounded-lg border">
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             <?php else: ?>
-                <div class="p-4 bg-red-50 text-red-600 rounded-lg text-center text-sm">
-                    Kode tiket <strong><?php echo htmlspecialchars($ticket_code); ?></strong> tidak ditemukan. Silakan periksa kembali kode Anda.
+                <div class="bg-red-50 text-red-600 text-sm p-4 rounded-xl text-center">
+                    Kode tiket tidak ditemukan. Pastikan penulisan huruf dan angka sudah benar.
                 </div>
             <?php endif; ?>
         <?php endif; ?>
-        
+
         <div class="mt-6 text-center border-t border-brand-light pt-4">
-            <a href="index.php" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">
-                ← Kembali ke Form Reservasi
-            </a>
+            <a href="index.php" class="text-xs text-gray-500 hover:text-gray-800">← Kembali ke Halaman Utama</a>
         </div>
     </div>
-
-    <footer class="text-center text-xs text-gray-400 mt-6">
-        &copy; <?php echo date('Y'); ?> Project Web Service Laptop. All rights reserved.
-    </footer>
 </body>
 </html>

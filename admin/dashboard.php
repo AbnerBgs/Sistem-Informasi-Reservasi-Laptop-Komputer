@@ -15,8 +15,14 @@ $statuses = [
 ];
 
 $services_by_status = ['pending' => [], 'proses' => [], 'selesai' => [], 'diambil' => []];
-$query = mysqli_query($conn, "SELECT * FROM services ORDER BY created_at DESC");
-while ($row = mysqli_fetch_assoc($query)) {
+
+$sql = "SELECT services.*, categories.category_name 
+        FROM services 
+        LEFT JOIN categories ON services.category_id = categories.id 
+        ORDER BY services.created_at DESC";
+$query = $conn->query($sql);
+
+while ($row = $query->fetch_assoc()) {
     $services_by_status[$row['status']][] = $row;
 }
 ?>
@@ -25,7 +31,7 @@ while ($row = mysqli_fetch_assoc($query)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DashBoard Admin - Project Web Service Laptop</title>
+    <title>Dashboard Admin - Semoga Nyala</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -42,7 +48,7 @@ while ($row = mysqli_fetch_assoc($query)) {
 <body class="bg-brand-bg min-h-screen text-gray-700">
     <nav class="bg-white border-b border-brand-medium px-6 py-4 flex justify-between items-center">
         <div>
-            <h1 class="font-bold text-lg text-gray-800">Dashboard Servis Admin</h1>
+            <h1 class="font-bold text-lg text-gray-800">Dashboard Servis Admin - Semoga Nyala</h1>
             <p class="text-xs text-gray-500">Halo, <?php echo htmlspecialchars($_SESSION['admin_name']); ?></p>
         </div>
         <div class="flex items-center gap-4">
@@ -77,11 +83,35 @@ while ($row = mysqli_fetch_assoc($query)) {
                                 <div>
                                     <p class="font-bold text-gray-800"><?php echo htmlspecialchars($item['customer_name']); ?></p>
                                     <p class="text-xs text-gray-500"><?php echo htmlspecialchars($item['device_type'] . ' - ' . $item['device_brand']); ?></p>
+                                    
+                                    <?php if (!empty($item['category_name'])): ?>
+                                        <span class="inline-block mt-1 text-[11px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
+                                            <?php echo htmlspecialchars($item['category_name']); ?>
+                                        </span>
+                                    <?php endif; ?>
+
+                                    <?php 
+                                        $wa_pelanggan = preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $item['customer_phone']));
+                                        $pesan_admin  = urlencode("Halo " . $item['customer_name'] . ", update servis tiket *" . $item['ticket_code'] . "* dari Semoga Nyala: status perangkat kamu saat ini *" . strtoupper($item['status']) . "*.");
+                                    ?>
+                                    <a href="https://wa.me/<?php echo $wa_pelanggan; ?>?text=<?php echo $pesan_admin; ?>" 
+                                       target="_blank" 
+                                       class="inline-flex items-center gap-1 mt-1 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md transition">
+                                        <span>WA: <?php echo htmlspecialchars($item['customer_phone']); ?></span>
+                                    </a>
                                 </div>
 
                                 <p class="text-xs bg-brand-bg p-2 rounded text-gray-600">
                                     <?php echo htmlspecialchars($item['problem_description']); ?>
                                 </p>
+
+                                <?php if (!empty($item['damage_photo'])): ?>
+                                    <a href="../uploads/<?php echo htmlspecialchars($item['damage_photo']); ?>" target="_blank" class="block">
+                                        <img src="../uploads/<?php echo htmlspecialchars($item['damage_photo']); ?>" 
+                                             alt="Foto Kerusakan" 
+                                             class="w-full h-28 object-cover rounded-lg border border-gray-200 hover:opacity-90 transition">
+                                    </a>
+                                <?php endif; ?>
 
                                 <form action="../proses/update_status.php" method="POST" class="pt-2 flex gap-1.5">
                                     <input type="hidden" name="id" value="<?php echo $item['id']; ?>">
