@@ -37,25 +37,25 @@ if (isset($_GET['kode']) && trim($_GET['kode']) !== '') {
         }
     </script>
 </head>
-<body class="bg-brand-bg min-h-screen flex items-center justify-center p-6 text-gray-700">
-    <div class="max-w-lg w-full bg-white p-8 rounded-2xl shadow-sm border border-brand-medium">
-        <h1 class="text-xl font-bold text-gray-800 mb-1">Lacak Status Servis</h1>
-        <p class="text-xs text-gray-500 mb-6">Masukkan kode tiket Anda (contoh: TK-20261118-7A0C)</p>
+<body class="bg-brand-bg min-h-screen flex items-center justify-center p-4 sm:p-6 text-gray-700">
+    <div class="max-w-lg w-full bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-brand-medium">
+        <h1 class="text-lg sm:text-xl font-bold text-gray-800 mb-1">Lacak Status Servis</h1>
+        <p class="text-xs text-gray-500 mb-5 sm:mb-6">Masukkan kode tiket Anda (contoh: TK-20261118-7A0C)</p>
 
-        <form method="GET" class="flex gap-2 mb-6">
+        <form method="GET" class="flex flex-col sm:flex-row gap-2 mb-6">
             <input type="text" name="kode" required placeholder="Masukkan kode tiket..."
                    value="<?php echo isset($_GET['kode']) ? htmlspecialchars($_GET['kode']) : ''; ?>"
-                   class="flex-1 border border-gray-200 bg-brand-light/20 p-2.5 rounded-lg text-sm">
-            <button type="submit" class="bg-brand-dark hover:bg-[#b0d2d2] text-gray-800 font-semibold px-5 py-2.5 rounded-lg text-sm">
+                   class="w-full sm:flex-1 border border-gray-200 bg-brand-light/20 p-2.5 rounded-lg text-sm">
+            <button type="submit" class="w-full sm:w-auto bg-brand-dark hover:bg-[#b0d2d2] text-gray-800 font-semibold px-5 py-2.5 rounded-lg text-sm transition">
                 Cek
             </button>
         </form>
 
         <?php if ($searched): ?>
             <?php if ($ticket): ?>
-                <div class="bg-brand-light/40 border border-brand-medium rounded-xl p-5 space-y-2 text-sm">
-                    <div class="flex justify-between items-center">
-                        <span class="font-mono font-bold text-gray-800"><?php echo htmlspecialchars($ticket['ticket_code']); ?></span>
+                <div class="bg-brand-light/40 border border-brand-medium rounded-xl p-4 sm:p-5 space-y-2 text-sm">
+                    <div class="flex flex-wrap justify-between items-center gap-2 pb-1">
+                        <span class="font-mono font-bold text-gray-800 text-xs sm:text-sm"><?php echo htmlspecialchars($ticket['ticket_code']); ?></span>
                         <span class="bg-brand-dark text-gray-800 text-xs font-bold uppercase px-3 py-1 rounded-full">
                             <?php echo htmlspecialchars($ticket['status']); ?>
                         </span>
@@ -69,7 +69,7 @@ if (isset($_GET['kode']) && trim($_GET['kode']) !== '') {
                     <?php if (!empty($ticket['damage_photo'])): ?>
                         <div class="pt-2">
                             <p class="text-xs font-semibold mb-1">Foto Kondisi Awal:</p>
-                            <img src="uploads/<?php echo htmlspecialchars($ticket['damage_photo']); ?>" alt="Foto Kerusakan" class="w-full h-40 object-cover rounded-lg border">
+                            <img src="uploads/<?php echo htmlspecialchars($ticket['damage_photo']); ?>" alt="Foto Kerusakan" class="w-full h-44 object-cover rounded-lg border">
                         </div>
                     <?php endif; ?>
                 </div>

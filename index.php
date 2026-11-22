@@ -28,38 +28,62 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY id ASC");
 </head>
 <body id="main-body" class="bg-brand-bg text-gray-700 dark:bg-slate-900 dark:text-slate-200 min-h-screen">
     <!-- Navbar -->
-    <nav class="bg-white dark:bg-slate-800 border-b border-brand-medium dark:border-slate-700 px-6 py-4 sticky top-0 z-50">
+    <nav class="bg-white dark:bg-slate-800 border-b border-brand-medium dark:border-slate-700 px-4 sm:px-6 py-3.5 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="index.php" class="font-bold text-lg text-gray-800 dark:text-white flex items-center gap-2">
+            <a href="index.php" class="font-bold text-base sm:text-lg text-gray-800 dark:text-white flex items-center gap-2">
                 <span>Semoga Nyala</span>
-                <span class="bg-brand-dark text-gray-800 text-xs px-2.5 py-1 rounded-md">Service Laptop</span>
+                <span class="hidden sm:inline-block bg-brand-dark text-gray-800 text-xs px-2.5 py-1 rounded-md">Service Laptop</span>
             </a>
-            <div class="flex items-center gap-5 text-sm">
-                <a href="#layanan" class="hover:text-gray-900 dark:hover:text-white hidden sm:inline">Layanan</a>
-                <a href="#reservasi" class="hover:text-gray-900 dark:hover:text-white hidden sm:inline">Reservasi</a>
+
+            <!-- Menu Desktop  -->
+            <div class="hidden md:flex items-center gap-5 text-sm">
+                <a href="#layanan" class="hover:text-gray-900 dark:hover:text-white">Layanan</a>
+                <a href="#reservasi" class="hover:text-gray-900 dark:hover:text-white">Reservasi</a>
                 <a href="tracking.php" class="hover:text-gray-900 dark:hover:text-white">Cek Status Tiket</a>
-                <button id="btn-tema" type="button" class="bg-brand-light dark:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium">
+                <button type="button" class="btn-tema-toggle bg-brand-light dark:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium">
                     Mode Gelap
                 </button>
                 <a href="admin/login.php" class="bg-brand-dark text-gray-800 font-semibold px-3.5 py-1.5 rounded-lg hover:bg-[#b0d2d2] transition">
                     Login
                 </a>
             </div>
+
+            <!-- Tombol Kontrol Mobile  -->
+            <div class="flex md:hidden items-center gap-2">
+                <button type="button" class="btn-tema-toggle bg-brand-light dark:bg-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-medium">
+                    Mode Gelap
+                </button>
+                <button id="btn-mobile-menu" type="button" aria-label="Menu" class="p-1.5 rounded-lg border border-brand-medium dark:border-slate-600 text-gray-800 dark:text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dropdown Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden mt-3 pt-3 border-t border-brand-medium dark:border-slate-700 flex flex-col gap-2.5 text-sm">
+            <a href="#layanan" class="mobile-nav-link py-1.5 px-2 rounded-lg hover:bg-brand-light/40 dark:hover:bg-slate-700">Layanan</a>
+            <a href="#reservasi" class="mobile-nav-link py-1.5 px-2 rounded-lg hover:bg-brand-light/40 dark:hover:bg-slate-700">Reservasi</a>
+            <a href="tracking.php" class="mobile-nav-link py-1.5 px-2 rounded-lg hover:bg-brand-light/40 dark:hover:bg-slate-700">Cek Status Tiket</a>
+            <a href="admin/login.php" class="bg-brand-dark text-gray-800 font-semibold py-2 px-3 rounded-lg text-center hover:bg-[#b0d2d2] transition">
+                Login Admin
+            </a>
         </div>
     </nav>
 
     <!-- Hero -->
-    <header class="py-16 px-6 text-center max-w-3xl mx-auto">
+    <header class="py-12 sm:py-16 px-4 sm:px-6 text-center max-w-3xl mx-auto">
         <span class="inline-block bg-brand-light dark:bg-slate-800 text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full mb-4">
             Cepat • Transparan • Terpercaya
         </span>
-        <h1 class="text-3xl md:text-5xl font-bold text-gray-800 dark:text-white leading-tight">
+        <h1 class="text-2xl sm:text-3xl md:text-5xl font-bold text-gray-800 dark:text-white leading-tight">
             Solusi Perbaikan Laptop & PC Tanpa Ribet
         </h1>
-        <p class="mt-4 text-gray-600 dark:text-slate-400">
+        <p class="mt-4 text-sm sm:text-base text-gray-600 dark:text-slate-400">
             Reservasi servis secara online dari rumah, dapatkan kode tiket unik, dan pantau progres perbaikan perangkat Anda secara real-time.
         </p>
-        <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <div class="mt-8 flex flex-col sm:flex-row justify-center gap-3">
             <a href="#reservasi" class="bg-brand-dark hover:bg-[#b0d2d2] text-gray-800 font-semibold px-6 py-3 rounded-xl transition">
                 Buat Reservasi Sekarang
             </a>
@@ -70,12 +94,12 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY id ASC");
     </header>
 
     <!-- Layanan -->
-    <section id="layanan" class="py-12 px-6 max-w-6xl mx-auto">
-        <div class="text-center mb-10">
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Layanan Kami</h2>
-            <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">Penanganan profesional untuk berbagai jenis kerusakan perangkat</p>
+    <section id="layanan" class="py-10 sm:py-12 px-4 sm:px-6 max-w-6xl mx-auto">
+        <div class="text-center mb-8 sm:mb-10">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Layanan Kami</h2>
+            <p class="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mt-1">Penanganan profesional untuk berbagai jenis kerusakan perangkat</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-brand-medium dark:border-slate-700 shadow-sm">
                 <span class="inline-block bg-brand-light text-gray-800 font-bold text-xs px-2.5 py-1 rounded-md mb-3">01</span>
                 <h3 class="font-bold text-gray-800 dark:text-white mb-2">Perbaikan Hardware</h3>
@@ -95,9 +119,9 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY id ASC");
     </section>
 
     <!-- Form Reservasi -->
-    <section id="reservasi" class="py-12 px-6 max-w-2xl mx-auto">
-        <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-brand-medium dark:border-slate-700 shadow-sm">
-            <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-1">Form Reservasi Servis</h2>
+    <section id="reservasi" class="py-10 sm:py-12 px-4 sm:px-6 max-w-2xl mx-auto">
+        <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-brand-medium dark:border-slate-700 shadow-sm">
+            <h2 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-1">Form Reservasi Servis</h2>
             <p class="text-xs text-gray-500 dark:text-slate-400 mb-6">Lengkapi data di bawah ini untuk mendapatkan nomor tiket antrean.</p>
 
             <form id="form-reservasi" action="proses/simpan_reservasi.php" method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -167,13 +191,32 @@ $categories = $conn->query("SELECT * FROM categories ORDER BY id ASC");
     </footer>
 
     <script>
-        const btnTema = document.querySelector("#btn-tema");
-        const htmlEl  = document.documentElement;
+        const btnTemaList = document.querySelectorAll(".btn-tema-toggle");
+        const htmlEl      = document.documentElement;
         
-        // toggle mode
-        btnTema.addEventListener("click", function () {
-            htmlEl.classList.toggle("dark");
-            btnTema.textContent = htmlEl.classList.contains("dark") ? "Mode Terang" : "Mode Gelap";
+        // toggle mode gelap/terang 
+        btnTemaList.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                htmlEl.classList.toggle("dark");
+                const isDark = htmlEl.classList.contains("dark");
+                btnTemaList.forEach(function (b) {
+                    b.textContent = isDark ? "Mode Terang" : "Mode Gelap";
+                });
+            });
+        });
+
+        // toggle menu mobile
+        const btnMobileMenu = document.querySelector("#btn-mobile-menu");
+        const mobileMenu    = document.querySelector("#mobile-menu");
+
+        btnMobileMenu.addEventListener("click", function () {
+            mobileMenu.classList.toggle("hidden");
+        });
+
+        document.querySelectorAll(".mobile-nav-link").forEach(function (link) {
+            link.addEventListener("click", function () {
+                mobileMenu.classList.add("hidden");
+            });
         });
 
         const formReservasi = document.querySelector("#form-reservasi");
