@@ -55,7 +55,7 @@ CREATE TABLE `services` (
   `customer_name` varchar(100) NOT NULL,
   `customer_phone` varchar(20) NOT NULL,
   `category_id` int(11) DEFAULT NULL,
-  `device_type` enum('Laptop','PC') NOT NULL,
+  `device_type` enum('Laptop', 'PC / Komputer', 'MacBook') NOT NULL,
   `device_brand` varchar(100) NOT NULL,
   `problem_description` text NOT NULL,
   `damage_photo` varchar(255) DEFAULT NULL,
