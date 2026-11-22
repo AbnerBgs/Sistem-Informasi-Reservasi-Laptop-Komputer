@@ -85,6 +85,18 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Struktur dari tabel `service_status_history`
+--
+
+CREATE TABLE `service_status_history` (
+  `id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `status` enum('pending','proses','selesai','diambil') NOT NULL,
+  `changed_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
 -- Dumping data untuk tabel `users`
 --
 
@@ -109,6 +121,11 @@ ALTER TABLE `services`
   ADD UNIQUE KEY `ticket_code` (`ticket_code`),
   ADD KEY `fk_service_category` (`category_id`);
 
+ALTER TABLE `service_status_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_status_history_service` (`service_id`),
+  ADD KEY `idx_status_history_user` (`changed_by`);
+
 --
 -- Indeks untuk tabel `users`
 --
@@ -132,6 +149,9 @@ ALTER TABLE `categories`
 ALTER TABLE `services`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
+ALTER TABLE `service_status_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
@@ -147,6 +167,17 @@ ALTER TABLE `users`
 --
 ALTER TABLE `services`
   ADD CONSTRAINT `fk_service_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL;
+
+ALTER TABLE `service_status_history`
+  ADD CONSTRAINT `fk_status_history_service` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_status_history_user` FOREIGN KEY (`changed_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+ALTER TABLE `services`
+  MODIFY `device_type` enum('Laptop','PC / Komputer','MacBook') NOT NULL;
+
+INSERT INTO `service_status_history` (`service_id`, `status`, `changed_by`, `created_at`)
+SELECT `id`, `status`, NULL, `created_at`
+FROM `services`;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

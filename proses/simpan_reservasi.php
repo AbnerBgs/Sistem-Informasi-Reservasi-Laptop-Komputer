@@ -39,7 +39,13 @@ $stmt->bind_param("sssisssss", $ticket_code, $customer_name, $customer_phone, $c
 if (!$stmt->execute()) {
     die("Gagal menyimpan data: " . $conn->error);
 }
+$service_id = $stmt->insert_id;
 $stmt->close();
+
+$historyStmt = $conn->prepare("INSERT INTO service_status_history (service_id, status, changed_by) VALUES (?, 'pending', NULL)");
+$historyStmt->bind_param("i", $service_id);
+$historyStmt->execute();
+$historyStmt->close();
 
 $adminWA = '6282310276459';
 $message = "Halo Admin Semoga Nyala, saya ingin konfirmasi reservasi servis:\n\n"

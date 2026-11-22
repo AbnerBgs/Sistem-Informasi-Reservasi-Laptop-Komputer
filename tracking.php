@@ -16,6 +16,21 @@ if (isset($_GET['kode']) && trim($_GET['kode']) !== '') {
     $stmt->execute();
     $ticket = $stmt->get_result()->fetch_assoc();
     $stmt->close();
+
+    $history = [];
+    if ($ticket) {
+        $historyStmt = $conn->prepare("SELECT status, created_at
+                                       FROM service_status_history
+                                       WHERE service_id = ?
+                                       ORDER BY created_at ASC, id ASC");
+        $historyStmt->bind_param("i", $ticket['id']);
+        $historyStmt->execute();
+        $historyResult = $historyStmt->get_result();
+        while ($row = $historyResult->fetch_assoc()) {
+            $history[] = $row;
+        }
+        $historyStmt->close();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -72,6 +87,38 @@ if (isset($_GET['kode']) && trim($_GET['kode']) !== '') {
                             <img src="uploads/<?php echo htmlspecialchars($ticket['damage_photo']); ?>" alt="Foto Kerusakan" class="w-full h-44 object-cover rounded-lg border">
                         </div>
                     <?php endif; ?>
+
+                    <div class="pt-4">
+                        <p class="text-xs font-bold text-gray-800 mb-3">Riwayat Status Servis</p>
+                        <?php
+                            $status_labels = [
+                                'pending' => 'Antrean Masuk',
+                                'proses' => 'Sedang Dikerjakan',
+                                'selesai' => 'Servis Selesai',
+                                'diambil' => 'Perangkat Sudah Diambil'
+                            ];
+                        ?>
+                        <div class="space-y-0">
+                            <?php foreach ($history as $index => $historyItem): ?>
+                                <?php
+                                    $historyDate = date('d M Y, H:i', strtotime($historyItem['created_at']));
+                                    $isLatest = $index === count($history) - 1;
+                                ?>
+                                <div class="flex gap-3">
+                                    <div class="flex flex-col items-center">
+                                        <span class="w-3 h-3 mt-1 rounded-full <?php echo $isLatest ? 'bg-emerald-500' : 'bg-brand-dark'; ?> border-2 border-white"></span>
+                                        <?php if (!$isLatest): ?>
+                                            <span class="w-px flex-1 bg-brand-medium"></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="pb-4">
+                                        <p class="font-semibold text-gray-800"><?php echo htmlspecialchars($status_labels[$historyItem['status']] ?? $historyItem['status']); ?></p>
+                                        <p class="text-xs text-gray-500"><?php echo htmlspecialchars($historyDate); ?></p>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
             <?php else: ?>
                 <div class="bg-red-50 text-red-600 text-sm p-4 rounded-xl text-center">
