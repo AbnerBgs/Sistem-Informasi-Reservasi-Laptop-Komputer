@@ -82,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium mb-1">Email</label>
-                <input type="email" name="email" required placeholder="admin@gmail.com"
+                <input type="email" name="email" required placeholder="......@example.com"
                        value="<?php echo htmlspecialchars($saved_email); ?>"
                        class="w-full border border-gray-200 bg-brand-light/30 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark">
             </div>
             <div>
                 <label class="block text-sm font-medium mb-1">Password</label>
-                <input type="password" name="password" required placeholder="••••••••"
+                <input type="password" name="password" required placeholder="......"
                        class="w-full border border-gray-200 bg-brand-light/30 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark">
             </div>
             <div class="flex items-center gap-2">
