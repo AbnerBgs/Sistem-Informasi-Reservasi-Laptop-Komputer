@@ -66,5 +66,5 @@ reservasi-laptop/
    - **Halaman Login Admin:** `http://localhost/reservasi-laptop/admin/login.php`
 
 ## Anggota Kelompok
-- **Abner Bagas** — NIM `123250014`
+- **Abner Bagus** — NIM `123250014`
 - **Nathan Narendrata** — NIM `123250076`
